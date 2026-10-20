@@ -1,0 +1,121 @@
+{
+  "model_version": "rf-v1",
+  "model_type": "MultiOutputRegressor(RandomForestRegressor)",
+  "trained_at": "2026-10-13T20:24:40.861817+00:00",
+  "feature_names": [
+    "water_level_cm",
+    "wl_lag1",
+    "wl_lag2",
+    "wl_lag3",
+    "wl_lag5",
+    "wl_diff1",
+    "wl_rate",
+    "wl_mean5",
+    "wl_mean10",
+    "wl_std10",
+    "rainfall_reading",
+    "rainfall_mean5",
+    "rainfall_intensity",
+    "water_sensor_raw",
+    "hour_sin",
+    "hour_cos"
+  ],
+  "window": 10,
+  "horizons_min": [
+    2,
+    4,
+    6,
+    8,
+    10
+  ],
+  "horizon_samples": [
+    2,
+    4,
+    6,
+    8,
+    10
+  ],
+  "sample_interval_min": 1.0,
+  "reference_height_cm": 100.0,
+  "data_source": "synthetic_demo",
+  "n_feature_rows": 2861,
+  "model_file": "flood_model.pkl",
+  "generated_at": "2026-10-13T20:24:40.862596+00:00",
+  "n_data_rows": 2880,
+  "n_train": 2002,
+  "n_val": 429,
+  "n_test": 430,
+  "target_stats": {
+    "mean_cm": 8.112,
+    "std_cm": 6.504,
+    "min_cm": 0.84,
+    "max_cm": 27.34
+  },
+  "metrics": {
+    "validation": {
+      "2": {
+        "mae_cm": 0.1137,
+        "rmse_cm": 0.1556,
+        "r2": 0.9996,
+        "n": 429
+      },
+      "4": {
+        "mae_cm": 0.1768,
+        "rmse_cm": 0.2401,
+        "r2": 0.9989,
+        "n": 429
+      },
+      "6": {
+        "mae_cm": 0.2316,
+        "rmse_cm": 0.3393,
+        "r2": 0.9979,
+        "n": 429
+      },
+      "8": {
+        "mae_cm": 0.2904,
+        "rmse_cm": 0.4237,
+        "r2": 0.9966,
+        "n": 429
+      },
+      "10": {
+        "mae_cm": 0.4163,
+        "rmse_cm": 0.6527,
+        "r2": 0.992,
+        "n": 429
+      }
+    },
+    "test": {
+      "2": {
+        "mae_cm": 0.0832,
+        "rmse_cm": 0.1042,
+        "r2": 0.9989,
+        "n": 430
+      },
+      "4": {
+        "mae_cm": 0.1389,
+        "rmse_cm": 0.1805,
+        "r2": 0.9966,
+        "n": 430
+      },
+      "6": {
+        "mae_cm": 0.1784,
+        "rmse_cm": 0.2233,
+        "r2": 0.9947,
+        "n": 430
+      },
+      "8": {
+        "mae_cm": 0.2321,
+        "rmse_cm": 0.2915,
+        "r2": 0.9906,
+        "n": 430
+      },
+      "10": {
+        "mae_cm": 0.3534,
+        "rmse_cm": 0.457,
+        "r2": 0.9761,
+        "n": 430
+      }
+    }
+  },
+  "metrics_unit": "cm"
+}

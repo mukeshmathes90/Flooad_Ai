@@ -1,0 +1,15 @@
+# Flood Prediction and Early Warning System - Python dependencies
+# Target runtime: Python 3.10 - 3.13 (tested on CPython 3.13)
+#
+# The backend only needs FastAPI + Uvicorn + Pydantic.
+# The ML pipeline additionally needs numpy / scikit-learn / joblib.
+# httpx + pytest are used by the automated test-suite.
+
+fastapi>=0.110,<1.0
+uvicorn[standard]>=0.29,<1.0
+pydantic>=2.6,<3.0
+numpy>=1.26
+scikit-learn>=1.4
+joblib>=1.3
+httpx>=0.27
+pytest>=8.0

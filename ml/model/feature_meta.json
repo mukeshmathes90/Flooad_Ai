@@ -1,0 +1,43 @@
+{
+  "model_version": "rf-v1",
+  "model_type": "MultiOutputRegressor(RandomForestRegressor)",
+  "trained_at": "2026-10-13T20:24:40.861817+00:00",
+  "feature_names": [
+    "water_level_cm",
+    "wl_lag1",
+    "wl_lag2",
+    "wl_lag3",
+    "wl_lag5",
+    "wl_diff1",
+    "wl_rate",
+    "wl_mean5",
+    "wl_mean10",
+    "wl_std10",
+    "rainfall_reading",
+    "rainfall_mean5",
+    "rainfall_intensity",
+    "water_sensor_raw",
+    "hour_sin",
+    "hour_cos"
+  ],
+  "window": 10,
+  "horizons_min": [
+    2,
+    4,
+    6,
+    8,
+    10
+  ],
+  "horizon_samples": [
+    2,
+    4,
+    6,
+    8,
+    10
+  ],
+  "sample_interval_min": 1.0,
+  "reference_height_cm": 100.0,
+  "data_source": "synthetic_demo",
+  "n_feature_rows": 2861,
+  "model_file": "flood_model.pkl"
+}

@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Flood Prediction and Early Warning System - live monitoring dashboard" />
+  <title>FloodWatch - Early Warning Dashboard</title>
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="app">
+    <!-- ============================== SIDEBAR ============================== -->
+    <aside class="sidebar" id="sidebar">
+      <div class="brand">
+        <div class="brand-mark" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M2 12c2 0 3-2 5-2s3 2 5 2 3-2 5-2 3 2 5 2" />
+            <path d="M2 17c2 0 3-2 5-2s3 2 5 2 3-2 5-2 3 2 5 2" />
+            <path d="M12 3v7" /><circle cx="12" cy="3" r="1.3" fill="currentColor" />
+          </svg>
+        </div>
+        <div class="brand-text">
+          <span class="brand-title">FloodWatch</span>
+          <span class="brand-sub">Early Warning System</span>
+        </div>
+      </div>
+
+      <nav class="nav" id="nav" aria-label="Sections">
+        <a class="nav-item is-active" href="#overview" data-target="overview">
+          <span class="nav-ico" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="9" rx="1.5"/><rect x="14" y="3" width="7" height="5" rx="1.5"/><rect x="14" y="12" width="7" height="9" rx="1.5"/><rect x="3" y="16" width="7" height="5" rx="1.5"/></svg>
+          </span>
+          <span>Overview</span>
+        </a>
+        <a class="nav-item" href="#monitoring" data-target="monitoring">
+          <span class="nav-ico" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h4l2-5 3 10 2-5h7"/></svg>
+          </span>
+          <span>Live Monitoring</span>
+        </a>
+        <a class="nav-item" href="#predictions" data-target="predictions">
+          <span class="nav-ico" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17l5-6 4 3 6-8"/><path d="M15 6h4v4"/></svg>
+          </span>
+          <span>Predictions</span>
+        </a>
+        <a class="nav-item" href="#historical" data-target="historical">
+          <span class="nav-ico" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19V5"/><path d="M4 19h16"/><rect x="7" y="11" width="3" height="5" rx="0.6"/><rect x="12" y="8" width="3" height="8" rx="0.6"/><rect x="17" y="13" width="3" height="3" rx="0.6"/></svg>
+          </span>
+          <span>Historical Data</span>
+        </a>
+        <a class="nav-item" href="#alerts" data-target="alerts">
+          <span class="nav-ico" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 0 1-3.4 0"/></svg>
+          </span>
+          <span>Alerts</span>
+          <span class="nav-count" id="nav-alert-count">0</span>
+        </a>
+        <a class="nav-item" href="#performance" data-target="performance">
+          <span class="nav-ico" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l8 4v5c0 5-3.5 8-8 9-4.5-1-8-4-8-9V7z"/><path d="M9 12l2 2 4-4"/></svg>
+          </span>
+          <span>Model Performance</span>
+        </a>
+        <a class="nav-item" href="#status" data-target="status">
+          <span class="nav-ico" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v4l3 2"/></svg>
+          </span>
+          <span>System Status</span>
+        </a>
+      </nav>
+
+      <div class="sidebar-foot">
+        <div class="mini-row"><span>Model</span><span class="mini-val" id="sb-model">—</span></div>
+        <div class="mini-row"><span>Source</span><span class="mini-val" id="sb-source">LIVE</span></div>
+        <div class="mini-row"><span>Server</span><span class="mini-val" id="sb-server">—</span></div>
+      </div>
+    </aside>
+
+    <div class="scrim" id="scrim" aria-hidden="true"></div>
+
+    <!-- =============================== MAIN =============================== -->
+    <div class="main">
+      <header class="topbar">
+        <button class="icon-btn menu-btn" id="menu-btn" aria-label="Toggle menu">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+        </button>
+
+        <div class="page-head">
+          <h1 id="page-title">Overview</h1>
+          <p class="page-sub" id="page-sub">Real-time flood risk monitoring</p>
+        </div>
+
+        <div class="top-actions">
+          <div class="src-toggle" role="group" aria-label="Data source">
+            <button id="btn-src-live" class="src-btn is-active" type="button">LIVE</button>
+            <button id="btn-src-test" class="src-btn" type="button">TEST</button>
+          </div>
+
+          <div class="pill" id="conn-pill" data-state="unknown">
+            <span class="dot"></span><span id="conn-text">Connecting…</span>
+          </div>
+
+          <div class="meta">
+            <div class="meta-line">Updated <b id="last-update">—</b></div>
+            <div class="meta-line">Age <b id="data-age">—</b></div>
+          </div>
+
+          <div class="clock" id="clock">--:--:--</div>
+
+          <button class="btn btn-ghost" id="refresh-btn" type="button" title="Refresh now">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-2.6-6.4"/><path d="M21 3v5h-5"/></svg>
+            <span class="btn-label">Refresh</span>
+          </button>
+
+          <label class="switch" title="Auto-refresh every 3s">
+            <input type="checkbox" id="auto-toggle" checked />
+            <span class="switch-track"><span class="switch-thumb"></span></span>
+            <span class="switch-label">Auto</span>
+          </label>
+        </div>
+      </header>
+
+      <div id="error-box" class="error-box" hidden>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 9v4"/><path d="M12 17h.01"/><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/></svg>
+        <span id="error-text"></span>
+      </div>
+
+      <div id="test-banner" class="test-banner" hidden>
+        <span class="test-banner-dot"></span>
+        <b>TEST MODE</b>
+        <span>You are viewing simulated scenario data — not live sensor readings.</span>
+        <button class="test-banner-exit" id="test-banner-exit" type="button">Return to LIVE</button>
+      </div>
+
+      <main class="content" id="content">
+
+        <!-- ========================= OVERVIEW ========================= -->
+        <section class="section" id="overview" data-title="Overview" data-sub="Real-time flood risk monitoring">
+          <div class="risk-hero" id="risk-hero" data-risk="unknown">
+            <div class="risk-hero-main">
+              <div class="risk-hero-label">Overall risk status</div>
+              <div class="risk-hero-value" id="hero-risk">UNKNOWN</div>
+              <div class="risk-hero-note" id="hero-note">Waiting for data…</div>
+            </div>
+            <div class="risk-hero-chips">
+              <div class="risk-chip">
+                <span class="risk-chip-label">Measured (now)</span>
+                <span class="risk-chip-value" id="chip-current">unknown</span>
+              </div>
+              <div class="risk-chip">
+                <span class="risk-chip-label">Forecast (ML)</span>
+                <span class="risk-chip-value" id="chip-forecast">unknown</span>
+              </div>
+              <div class="risk-chip">
+                <span class="risk-chip-label">Source</span>
+                <span class="risk-chip-value" id="chip-source">live</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="kpi-grid">
+            <div class="kpi" data-accent="water">
+              <div class="kpi-top"><span class="kpi-label">Water level</span><span class="kpi-ico">≈</span></div>
+              <div class="kpi-value"><span id="kpi-water">—</span><span class="kpi-unit">cm</span></div>
+              <div class="kpi-foot" id="kpi-water-foot">measured above reference</div>
+            </div>
+            <div class="kpi" data-accent="rain">
+              <div class="kpi-top"><span class="kpi-label">Rainfall</span><span class="kpi-ico">☂</span></div>
+              <div class="kpi-value"><span id="kpi-rain">—</span><span class="kpi-unit">%</span></div>
+              <div class="kpi-foot" id="kpi-rain-foot">relative intensity · raw ADC —</div>
+            </div>
+            <div class="kpi" data-accent="dist">
+              <div class="kpi-top"><span class="kpi-label">Ultrasonic distance</span><span class="kpi-ico">↧</span></div>
+              <div class="kpi-value"><span id="kpi-dist">—</span><span class="kpi-unit">cm</span></div>
+              <div class="kpi-foot">sensor → water surface</div>
+            </div>
+            <div class="kpi" data-accent="rate">
+              <div class="kpi-top"><span class="kpi-label">Rate of rise</span><span class="kpi-ico">↗</span></div>
+              <div class="kpi-value"><span id="kpi-rate">—</span><span class="kpi-unit">cm/min</span></div>
+              <div class="kpi-foot" id="kpi-rate-foot">trend of recent readings</div>
+            </div>
+            <div class="kpi" data-accent="forecast">
+              <div class="kpi-top"><span class="kpi-label">Predicted peak</span><span class="kpi-ico">◔</span></div>
+              <div class="kpi-value"><span id="kpi-pred">—</span><span class="kpi-unit">cm</span></div>
+              <div class="kpi-foot" id="kpi-pred-foot">ML forecast —</div>
+            </div>
+            <div class="kpi" data-accent="risk">
+              <div class="kpi-top"><span class="kpi-label">Risk status</span><span class="kpi-ico">●</span></div>
+              <div class="kpi-value"><span id="kpi-risk" class="risk-text">—</span></div>
+              <div class="kpi-foot" id="kpi-risk-foot">current measured risk</div>
+            </div>
+            <div class="kpi" data-accent="device">
+              <div class="kpi-top"><span class="kpi-label">Device connectivity</span><span class="kpi-ico">◈</span></div>
+              <div class="kpi-value kpi-value-sm"><span id="kpi-device">—</span></div>
+              <div class="kpi-foot" id="kpi-device-foot">—</div>
+            </div>
+            <div class="kpi" data-accent="alerts">
+              <div class="kpi-top"><span class="kpi-label">Active alerts</span><span class="kpi-ico">!</span></div>
+              <div class="kpi-value"><span id="kpi-alerts">—</span></div>
+              <div class="kpi-foot" id="kpi-alerts-foot">last 25 logged</div>
+            </div>
+          </div>
+
+          <div class="panel">
+            <div class="panel-head">
+              <div>
+                <h2>Water level history</h2>
+                <p class="panel-sub">Measured level versus configured risk thresholds (cm)</p>
+              </div>
+            </div>
+            <div class="chart-wrap chart-tall"><canvas id="chart-water"></canvas></div>
+          </div>
+
+          <div class="grid-2">
+            <div class="panel">
+              <div class="panel-head">
+                <div><h2>Rainfall history</h2><p class="panel-sub">Calibrated relative intensity (%)</p></div>
+              </div>
+              <div class="chart-wrap"><canvas id="chart-rain"></canvas></div>
+            </div>
+            <div class="panel">
+              <div class="panel-head">
+                <div><h2>Risk distribution</h2><p class="panel-sub">Recent readings by risk band</p></div>
+              </div>
+              <div class="chart-wrap"><canvas id="chart-risk"></canvas></div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ====================== LIVE MONITORING ====================== -->
+        <section class="section" id="monitoring" data-title="Live Monitoring" data-sub="Latest sensor values and device health" hidden>
+          <div class="grid-3">
+            <div class="panel">
+              <div class="panel-head"><div><h2>Device status</h2><p class="panel-sub">Connectivity and freshness</p></div></div>
+              <div class="stat-list">
+                <div class="stat-row"><span>Status</span><b id="mon-status">—</b></div>
+                <div class="stat-row"><span>Device ID</span><b id="mon-device">—</b></div>
+                <div class="stat-row"><span>Source</span><b id="mon-source">—</b></div>
+                <div class="stat-row"><span>Last seen</span><b id="mon-last">—</b></div>
+                <div class="stat-row"><span>Age</span><b id="mon-age">—</b></div>
+                <div class="stat-row"><span>Reading valid</span><b id="mon-valid">—</b></div>
+                <div class="stat-row"><span>Invalid reason</span><b id="mon-invalid">—</b></div>
+              </div>
+            </div>
+            <div class="panel">
+              <div class="panel-head"><div><h2>Current reading</h2><p class="panel-sub">Raw and derived values</p></div></div>
+              <div class="stat-list">
+                <div class="stat-row"><span>Water level</span><b id="mon-water">—</b></div>
+                <div class="stat-row"><span>Ultrasonic distance</span><b id="mon-dist">—</b></div>
+                <div class="stat-row"><span>Rainfall raw ADC</span><b id="mon-rainraw">—</b></div>
+                <div class="stat-row"><span>Rainfall intensity</span><b id="mon-rainpct">—</b></div>
+                <div class="stat-row"><span>Water sensor raw</span><b id="mon-wraw">—</b></div>
+                <div class="stat-row"><span>PIR motion</span><b id="mon-pir">—</b></div>
+                <div class="stat-row"><span>Server timestamp</span><b id="mon-ts">—</b></div>
+              </div>
+            </div>
+            <div class="panel">
+              <div class="panel-head"><div><h2>Thresholds</h2><p class="panel-sub">Prototype values — calibrate on site</p></div></div>
+              <div class="stat-list" id="mon-thresholds"></div>
+              <p class="muted mt-8" id="mon-threshold-note">Reference height: —</p>
+            </div>
+          </div>
+
+          <div class="panel">
+            <div class="panel-head">
+              <div><h2>Recent sensor readings</h2><p class="panel-sub">Newest first · valid readings only</p></div>
+            </div>
+            <div class="table-scroll">
+              <table class="data-table">
+                <thead>
+                  <tr><th>Time</th><th>Device</th><th>Source</th><th class="num">Water (cm)</th><th class="num">Distance (cm)</th>
+                    <th class="num">Rain ADC</th><th class="num">Rain %</th><th class="num">Water raw</th><th>Risk</th></tr>
+                </thead>
+                <tbody id="readings-table"></tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- ======================== PREDICTIONS ======================== -->
+        <section class="section" id="predictions" data-title="Predictions" data-sub="Validated machine-learning forecasts" hidden>
+          <div class="panel">
+            <div class="panel-head">
+              <div><h2>Water level forecast</h2><p class="panel-sub">Measured history + validated ML projection (cm)</p></div>
+              <span class="pill pill-soft" id="pred-model-pill">model —</span>
+            </div>
+            <div class="chart-wrap chart-tall"><canvas id="chart-forecast"></canvas></div>
+            <p class="muted mt-8">Solid line = accepted (validated) forecast. Dashed line = raw model output before validation.
+              A gap means the forecast at that horizon was rejected or unavailable.</p>
+          </div>
+
+          <div class="panel">
+            <div class="panel-head">
+              <div><h2>Forecast horizons</h2><p class="panel-sub">Each output is validated before it is trusted</p></div>
+            </div>
+            <div id="pred-note" class="note note-info" hidden></div>
+            <div class="table-scroll">
+              <table class="data-table">
+                <thead>
+                  <tr><th>Horizon</th><th class="num">Raw model (cm)</th><th class="num">Accepted (cm)</th>
+                    <th>Validation</th><th>Risk</th><th>Reason</th></tr>
+                </thead>
+                <tbody id="pred-table"></tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- ====================== HISTORICAL DATA ====================== -->
+        <section class="section" id="historical" data-title="Historical Data" data-sub="Filter stored readings by time range" hidden>
+          <div class="panel">
+            <div class="panel-head">
+              <div><h2>Historical readings</h2><p class="panel-sub">Filter the recent recorded measurements</p></div>
+              <div class="filter-bar">
+                <label class="field"><span>From</span><input type="datetime-local" id="hist-from" /></label>
+                <label class="field"><span>To</span><input type="datetime-local" id="hist-to" /></label>
+                <label class="field"><span>Rows</span>
+                  <select id="hist-limit">
+                    <option value="100">100</option>
+                    <option value="300" selected>300</option>
+                    <option value="1000">1000</option>
+                    <option value="5000">5000</option>
+                  </select>
+                </label>
+                <button class="btn btn-primary" id="hist-apply" type="button">Apply</button>
+                <button class="btn btn-ghost" id="hist-clear" type="button">Clear</button>
+              </div>
+            </div>
+            <div class="muted" id="hist-summary">—</div>
+            <div class="table-scroll">
+              <table class="data-table">
+                <thead>
+                  <tr><th>Time</th><th>Device</th><th>Source</th><th class="num">Water (cm)</th><th class="num">Distance (cm)</th>
+                    <th class="num">Rain ADC</th><th class="num">Rain %</th><th class="num">Water raw</th><th>Valid</th></tr>
+                </thead>
+                <tbody id="hist-table"></tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- =========================== ALERTS =========================== -->
+        <section class="section" id="alerts" data-title="Alerts" data-sub="Logged warnings and notifications" hidden>
+          <div class="panel">
+            <div class="panel-head">
+              <div><h2>Alert history</h2><p class="panel-sub">Duplicate-suppressed; test alerts are never sent</p></div>
+              <div class="filter-bar">
+                <label class="field"><span>Risk</span>
+                  <select id="alert-risk">
+                    <option value="">All</option>
+                    <option value="warning">Warning</option>
+                    <option value="high">High</option>
+                    <option value="critical">Critical</option>
+                  </select>
+                </label>
+                <label class="field"><span>Origin contains</span><input type="text" id="alert-origin" placeholder="e.g. sensor" /></label>
+                <label class="field"><span>Rows</span>
+                  <select id="alert-limit">
+                    <option value="50">50</option>
+                    <option value="100" selected>100</option>
+                    <option value="500">500</option>
+                  </select>
+                </label>
+                <button class="btn btn-primary" id="alert-apply" type="button">Apply</button>
+              </div>
+            </div>
+            <div class="note" id="notify-note">Remote notifications: checking…</div>
+            <div class="table-scroll">
+              <table class="data-table">
+                <thead>
+                  <tr><th>Time</th><th>Risk</th><th>Origin</th><th>Device</th><th>Message</th><th>Notification</th></tr>
+                </thead>
+                <tbody id="alert-table"></tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="panel">
+            <div class="panel-head">
+              <div><h2>Email notifications</h2><p class="panel-sub">Only genuine risk transitions are emailed — never on startup</p></div>
+              <div class="panel-actions">
+                <select id="email-send-scenario" class="select" title="Risk level of the demo email">
+                  <option value="normal">Normal</option>
+                  <option value="warning" selected>Warning</option>
+                  <option value="high">High-risk</option>
+                  <option value="critical">Critical</option>
+                </select>
+                <button class="btn btn-primary" id="email-send-test" type="button">Send test email</button>
+              </div>
+            </div>
+            <p class="muted">Real alerts carry a plain <code>[Flood Alert]</code> subject. The button above sends a demo
+              tagged <code>[Flood Alert][TEST]</code> so it can never be mistaken for a real flood, and it is logged with
+              <b>is_test</b> in the table below.</p>
+            <div class="note" id="email-status-note">Email: checking…</div>
+            <div class="stat-list" id="email-status-detail"></div>
+            <div class="table-scroll">
+              <table class="data-table">
+                <thead>
+                  <tr><th>Time</th><th>Subject</th><th>Status</th><th>Failure reason</th></tr>
+                </thead>
+                <tbody id="email-table"></tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- ====================== MODEL PERFORMANCE ====================== -->
+        <section class="section" id="performance" data-title="Model Performance" data-sub="Held-out evaluation metrics" hidden>
+          <div class="note note-warn" id="perf-warning" hidden></div>
+
+          <div class="kpi-grid kpi-grid-3">
+            <div class="kpi" data-accent="forecast">
+              <div class="kpi-top"><span class="kpi-label">Test MAE</span><span class="kpi-ico">±</span></div>
+              <div class="kpi-value"><span id="perf-mae">—</span><span class="kpi-unit">cm</span></div>
+              <div class="kpi-foot" id="perf-mae-foot">—</div>
+            </div>
+            <div class="kpi" data-accent="water">
+              <div class="kpi-top"><span class="kpi-label">Test RMSE</span><span class="kpi-ico">σ</span></div>
+              <div class="kpi-value"><span id="perf-rmse">—</span><span class="kpi-unit">cm</span></div>
+              <div class="kpi-foot">root-mean-square error</div>
+            </div>
+            <div class="kpi" data-accent="device">
+              <div class="kpi-top"><span class="kpi-label">Test R²</span><span class="kpi-ico">R²</span></div>
+              <div class="kpi-value"><span id="perf-r2">—</span></div>
+              <div class="kpi-foot">coefficient of determination</div>
+            </div>
+          </div>
+
+          <div class="panel">
+            <div class="panel-head">
+              <div><h2>Error by forecast horizon</h2><p class="panel-sub">Held-out test split · lower is better</p></div>
+            </div>
+            <div class="chart-wrap chart-tall"><canvas id="chart-model"></canvas></div>
+          </div>
+
+          <div class="grid-2">
+            <div class="panel">
+              <div class="panel-head"><div><h2>Metrics table</h2><p class="panel-sub">Validation and test splits</p></div></div>
+              <div class="table-scroll">
+                <table class="data-table">
+                  <thead><tr><th>Horizon</th><th>Split</th><th class="num">MAE (cm)</th><th class="num">RMSE (cm)</th><th class="num">R²</th><th class="num">n</th></tr></thead>
+                  <tbody id="perf-table"></tbody>
+                </table>
+              </div>
+            </div>
+            <div class="panel">
+              <div class="panel-head"><div><h2>Model details</h2><p class="panel-sub">Training metadata</p></div></div>
+              <div class="stat-list" id="perf-details"></div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ======================== SYSTEM STATUS ======================== -->
+        <section class="section" id="status" data-title="System Status" data-sub="Backend, database and notification health" hidden>
+          <div class="kpi-grid kpi-grid-3">
+            <div class="kpi" data-accent="device">
+              <div class="kpi-top"><span class="kpi-label">Backend</span><span class="kpi-ico">◈</span></div>
+              <div class="kpi-value kpi-value-sm"><span id="sys-backend">—</span></div>
+              <div class="kpi-foot" id="sys-backend-foot">—</div>
+            </div>
+            <div class="kpi" data-accent="water">
+              <div class="kpi-top"><span class="kpi-label">Database</span><span class="kpi-ico">▤</span></div>
+              <div class="kpi-value kpi-value-sm"><span id="sys-db">—</span></div>
+              <div class="kpi-foot" id="sys-db-foot">—</div>
+            </div>
+            <div class="kpi" data-accent="forecast">
+              <div class="kpi-top"><span class="kpi-label">ML model</span><span class="kpi-ico">◔</span></div>
+              <div class="kpi-value kpi-value-sm"><span id="sys-model">—</span></div>
+              <div class="kpi-foot" id="sys-model-foot">—</div>
+            </div>
+          </div>
+
+          <div class="panel">
+            <div class="panel-head">
+              <div><h2>ESP32 connection</h2>
+                <p class="panel-sub">Enter the IP shown on the ESP32 OLED ("Net") — the backend then pulls its readings from that address</p></div>
+            </div>
+            <p class="muted">Connect your laptop and the ESP32 to the <b>same hotspot / Wi-Fi</b>. Leave the box empty if the ESP32 is instead
+              pushing readings to this backend (it POSTs to your PC's IP).</p>
+            <div class="filter-bar">
+              <label class="field"><span>ESP32 address</span>
+                <input type="text" id="esp-host" placeholder="e.g. 192.168.43.55" autocomplete="off" spellcheck="false" />
+              </label>
+              <label class="field"><span>Port</span>
+                <input type="number" id="esp-port" min="1" max="65535" value="80" />
+              </label>
+              <button class="btn btn-primary" id="esp-save" type="button">Save</button>
+              <button class="btn btn-ghost" id="esp-test" type="button">Test</button>
+              <button class="btn btn-ghost" id="esp-clear" type="button">Clear</button>
+            </div>
+            <div class="stat-list" id="esp-status"></div>
+          </div>
+
+          <div class="grid-2">
+            <div class="panel">
+              <div class="panel-head"><div><h2>Database statistics</h2><p class="panel-sub">Row counts per table</p></div></div>
+              <div class="stat-list" id="sys-db-stats"></div>
+            </div>
+            <div class="panel">
+              <div class="panel-head"><div><h2>Configuration</h2><p class="panel-sub">Runtime parameters</p></div></div>
+              <div class="stat-list" id="sys-config"></div>
+            </div>
+          </div>
+
+          <div class="panel">
+            <div class="panel-head"><div><h2>Software test controls</h2><p class="panel-sub">Inject a labelled scenario through the real pipeline</p></div></div>
+            <p class="muted">These buttons inject <code>source="test"</code> readings through validation → database →
+              prediction → validation → risk engine, and each one also sends a clearly-tagged <code>[TEST]</code> demo email
+              so you can verify the alert layout. <b>Reset</b> removes only test rows and never touches live ESP32 data.</p>
+            <div class="test-grid">
+              <button class="btn btn-test test-normal" data-scenario="normal" type="button">TEST NORMAL DATA</button>
+              <button class="btn btn-test test-warning" data-scenario="warning" type="button">TEST WARNING</button>
+              <button class="btn btn-test test-high" data-scenario="high" type="button">TEST HIGH-RISK</button>
+              <button class="btn btn-test test-critical" data-scenario="critical" type="button">TEST CRITICAL</button>
+              <button class="btn btn-ghost" id="btn-reset" type="button">RESET TO LIVE</button>
+            </div>
+          </div>
+        </section>
+
+      </main>
+
+      <footer class="footer">
+        <span id="footer-info">Flood Prediction &amp; Early Warning System</span>
+        <span id="footer-conn">—</span>
+      </footer>
+    </div>
+  </div>
+
+  <div id="toasts" class="toasts" aria-live="polite"></div>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  <script src="dashboard.js"></script>
+</body>
+</html>

@@ -1,0 +1,18 @@
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.venv/
+venv/
+
+# Project runtime artefacts
+flood_system.db
+flood_system.db-wal
+flood_system.db-shm
+logs/*.out
+logs/*.err
+config.txt
+
+# Saved model (regenerate with train_model.bat) - remove this line if you want to
+# commit the trained model.
+# ml/model/flood_model.pkl
